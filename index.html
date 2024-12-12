@@ -69,12 +69,12 @@
       }
     </style>
 
-    
+
     <!-- Custom styles for this template -->
     <link href="https://getbootstrap.com/docs/5.2/examples/checkout/form-validation.css" rel="stylesheet">
   </head>
   <body class="bg-light">
-    
+
 <div class="container">
   <main>
     <div class="py-5 text-center">
@@ -114,14 +114,14 @@
               <div class="col-md-6 mb-3">
                 <label for="Name">Nombre</label>
                 <input type="text" class="form-control" id="Name" placeholder="" value="" autocomplete="off" required>
-                <div class="invalid-feedback">
+                <div class="invalid-feedback" id="invalid-name">
                   Nombre inválido
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="Number">Cantidad</label>
                 <input type="text" class="form-control" id="Number" placeholder="" value="" autocomplete="off" required>
-                <div class="invalid-feedback">
+                <div class="invalid-feedback" id="invalid-count">
                  Cantidad inválida
                 </div>
               </div>
@@ -129,13 +129,25 @@
             <button id="btnAgregar" class="btn btn-primary btn-lg btn-block" type="button">Agregar</button>
             <button id="btnClear" class="btn btn-primary btn-lg btn-block" type="button">Limpiar todo</button>
             <hr class="mb-4">
-            
+
             <!-- Insertar tabla aquí -->
-    
+            <table class="table" id="product-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Producto</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Precio Individual</th>
+                </tr>
+              </thead>
+              <tbody id="product-table-body">
+              </tbody>
+            </div>
+
           </form>
         </div>
-      </div>
-    
+      </table>
+
       <footer class="my-5 pt-5 text-muted text-center text-small">
         <p class="mb-1">&copy; <div id="fecha"></div> JC Inc.</p>
         <ul class="list-inline">
@@ -145,7 +157,7 @@
         </ul>
       </footer>
     </div>
-    
+
         <script src="js/main.js"></script>
 
 
