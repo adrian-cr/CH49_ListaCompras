@@ -22,6 +22,7 @@ let productOrderNumber = 1;
 let totalCount = 0;
 let totalPrice = 0;
 let totalProducts = 0;
+let productData = [];
 
 //Local Functions
 const createRandomPrice = () => Math.floor(Math.random() * 100);
@@ -51,8 +52,6 @@ const validate = (valuetype) => {
     if (!isNumValid(countTxt)) {
       showError(invalidCountElement, countFieldElement);
   }
-
-
 }
 
 }
@@ -77,6 +76,7 @@ addButtonElement.addEventListener("click", e => {
   e.preventDefault();
 
   //Declare Local Variables
+  let productName = nameFieldElement.value;
   let productCount = parseInt(countFieldElement.value);
   let productPrice = createRandomPrice();
 
@@ -87,14 +87,21 @@ addButtonElement.addEventListener("click", e => {
   }
 
   //Update Product Table
-  productTableBodyElement.insertAdjacentHTML("beforeend",
-      `<tr>
-        <th scope="row">${productOrderNumber}</th>
-        <td>${nameFieldElement.value}</td>
-        <td>${countFieldElement.value}</td>
-        <td>$${productPrice}</td>
-      </tr>`)
+  let newRow = `
+    <tr>
+      <th scope="row">${productOrderNumber}</th>
+      <td>${productName}</td>
+      <td>${productCount}</td>
+      <td>$${productPrice}</td>
+    </tr>`;
+  productTableBodyElement.insertAdjacentHTML("beforeend", newRow);
   productOrderNumber++;
+  productData.push({
+    order: productOrderNumber,
+    name: productName,
+    count: productCount,
+    price : productPrice
+  })
 
   //Update Order Summary
   totalProducts++;
@@ -109,12 +116,21 @@ addButtonElement.addEventListener("click", e => {
   //Clear Name, Count Fields
   clearFields();
 
+  //Add info to local storage
+  localStorage.setItem("totalProducts", totalProducts);
+  localStorage.setItem("totalPrice", totalPrice);
+  localStorage.setItem("totalCount", totalCount);
+  localStorage.setItem("productData", JSON.stringify(productData))
 })
 
 clearButtonElement.addEventListener("click", e =>{
   resetVars();
   clearVals();
   productTableBodyElement.innerHTML = "";
+  localStorage.removeItem("totalProducts");
+  localStorage.removeItem("totalPrice");
+  localStorage.removeItem("totalCount");
+  localStorage.removeItem("productData");
 })
 
 nameFieldElement.addEventListener("click", e => {
@@ -131,3 +147,37 @@ countFieldElement.addEventListener("click", e => {
 countFieldElement.addEventListener("blur", e => {
   validate("count")
 });
+
+window.addEventListener("load", e => {
+  if (localStorage.getItem("totalProducts") != null) {
+    totalProducts += Number(localStorage.getItem("totalProducts"));
+  }
+  if (localStorage.getItem("totalCount") != null) {
+    totalCount += Number(localStorage.getItem("totalCount"));
+  }
+  if (localStorage.getItem("totalPrice") != null) {
+    totalPrice += Number(localStorage.getItem("totalPrice"));
+  }
+
+  if (localStorage.getItem("productData") != null){
+    data = JSON.parse(localStorage.getItem("productData"));
+
+    data.forEach( e => {
+      productData.push(e);
+      let newRow = `
+        <tr>
+          <th scope="row">${e.order}</th>
+          <td>${e.name}</td>
+          <td>${e.count}</td>
+          <td>$${e.price}</td>
+        </tr>
+      `;
+      productTableBodyElement.insertAdjacentHTML("beforeend", newRow);
+    });
+  }
+
+
+  totalCountElement.innerText = totalCount;
+  totalProductsElement.innerText = totalProducts;
+  totalPriceElement.innerText = "$" + totalPrice;
+})
